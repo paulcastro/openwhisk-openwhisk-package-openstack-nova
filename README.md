@@ -1,4 +1,4 @@
-# wsk-pkg-openstack-nova
+# OpenWhisk packges for Nova
 Package to interact with OpenStack Nova
 
 ## Actions
