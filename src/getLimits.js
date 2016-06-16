@@ -15,11 +15,22 @@ var https = require('https')
 
 function main(params) {
 
-     
+    console.log('getLimits. Params are '+JSON.stringify(params))
+
+    if (!params.apiToken || !params.host || !params.port || !params.path) {
+        return whisk.error("Missing required params")
+    }
+
+
     var apiToken = params.apiToken
     var host = params.host
     var port = params.port
     var path = params.path
+ 
+    var context = null
+    if (params.context) {
+        context = params.context
+    }
 
     // harcode for testing
     host = '204d853f.ngrok.io'
@@ -50,8 +61,12 @@ function main(params) {
         });
         
         res.on('end', function() {
-            console.log(json)            
+            console.log('getLimits. response is '+ json)            
             var j = JSON.parse(json)
+
+            if (context) {
+                j.context = context
+            }
             return whisk.done(j)
 
         });
