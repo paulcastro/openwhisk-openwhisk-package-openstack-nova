@@ -37,7 +37,7 @@ function main(params) {
         'X-Auth-Token':apiToken
     };
  
-    var apiEndpoint = protocol+'://'+host+':'+port+path
+    var apiEndpoint = protocol+'//'+host+':'+port+path
     // hardcode for now
     var options = {
         url: apiEndpoint+'/servers',
@@ -59,6 +59,7 @@ function main(params) {
             return whisk.error("Got error " + error)
         }
         
+        
         var j = JSON.parse(body)
 
         if (context) {
@@ -70,8 +71,8 @@ function main(params) {
         j.apiToken = apiToken
 
         if (j.servers.length > 0) {
-            j.snapshotVolumeID = j.servers[0].id
-        }
+            j.serverId = j.servers[0].id
+        } 
 
         return whisk.done(j)
 

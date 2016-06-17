@@ -17,19 +17,41 @@ function main(params) {
 
     console.log('createNewSnapshot. got params '+JSON.stringify(params))
 
-    if (!params.apiToken || !params.apiEndpoint ||  !params.snapshotVolumeID ) {
+    /*if (!params.apiToken || !params.apiEndpoint ||  !params.snapshotVolumeID ) {
         return whisk.error("Missing required params")
+    }*/
+     if (!params.apiToken) {
+        return whisk.error("Missing apiToken")
+    }
+     if (!params.apiEndpoint) {
+        return whisk.error("Missing apiEndpoint")
+    }
+     if (!params.serverId ) {
+        return whisk.error("Missing snapshot serverId")
     }
 
-    if (!params.context || !params.context.snapshotName || !params.context.snapshotDesc) {
-        return whisk.error("Missing context which should contain snapshot name and description")
+    if (!params.context) {
+        return whisk.error("Missing context")
+    }
+
+    if (!params.context.backupName) {
+        return whisk.error("Missing backup name")
+    }
+
+    if (!params.context.backupType) {
+        return whisk.error("Missing backup type")
+    }
+
+    if (!params.context.rotation) {
+        return whisk.error("Missing rotation")
     }
 
     var apiEndpoint = params.apiEndpoint
     var apiToken = params.apiToken
-    var snapshotVolumeID = params.snapshotVolumeID
-    var snapshotName = params.context.snapshotName
-    var snapshotDesc = params.context.snapshotDesc
+    var serverId = params.serverId
+    var backupName = params.context.backupName
+    var backupType = params.context.backupType
+    var rotation = params.context.rotation
 
 
     console.log('createNewSnapshot params ' + JSON.stringify(params))
@@ -46,17 +68,16 @@ function main(params) {
 
     //May be a better way to parse this
     var post_data = {
-        snapshot: {
-            display_name: snapshotName,
-            display_description: snapshotDesc,
-            volume_id: snapshotVolumeID,
-            force: false
+        createBackup: {
+            name: backupName,
+            backup_type: backupType,
+            rotation: rotation
         }
-    };   
+    };  
 
     // hardcode for now
     var options = {
-        uri: apiEndpoint+'/os-snapshots',
+        uri: apiEndpoint+'/servers/'+serverId+'/action',
         method: 'POST',
         json: post_data,
         headers: headers
